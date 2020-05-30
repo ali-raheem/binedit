@@ -6,8 +6,39 @@
 #include <sys/types.h>
 
 void usage(char *progname) {
-    printf("Usage: %s input_file offset [-f] patch_file\n", progname);
-    exit(EXIT_FAILURE);
+  puts("binedit v0.2.0 Ali Raheem");
+  puts("https://github.com/ali-raheem/binedit");
+  printf("Usage: %s input_file offset [-f] patch\n", progname);
+  exit(EXIT_FAILURE);
+}
+
+int parse(char *outBuffer, char *inBuffer) {
+  int i, j;
+  int len = strlen(inBuffer);
+  i = 0;
+  j = 0;
+  while(i < len) {
+    switch(inBuffer[i]) {
+    case '\\':
+      switch(inBuffer[++i]) {
+      case '\\':
+	outBuffer[j++] = inBuffer[i];
+	break;
+      case 'x':
+	assert(1 == sscanf(inBuffer+i+1, "%2x", (uint *) &outBuffer[j++]));
+	i += 2;
+	break;
+      default:
+	printf("Error: Don't know what '\\%c' means.\n", inBuffer[i]);
+	exit(EXIT_FAILURE);
+      }
+      break;
+    default:
+      outBuffer[j++] = inBuffer[i];
+    }
+    i++;
+  }
+  return j;
 }
 
 int main(int argc, char *argv[]) {
@@ -37,8 +68,9 @@ int main(int argc, char *argv[]) {
     assert(0 < fread(patch_data, fpstat.st_size, sizeof(char), fp));
     fclose(fp);
   } else {
-    patch_data = patch_file;
-    patch_len = strlen(patch_data);
+    patch_data = (char *) malloc(sizeof(char) * strlen(patch_file));
+    assert(NULL != patch_data);
+    patch_len = parse(patch_data, patch_file);
   }
 
 

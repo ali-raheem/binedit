@@ -8,17 +8,13 @@ Simple utility to let you patch files with arbitary data.
 
 ## Usage
 
-binedit can take the bytes to patch in either as a command line argument (convient unless you need to patch in nullbytes) or from a file.
+binedit can take the bytes to patch in either as a command line argument or from a file.
 
-Printable characters are easiest to use:
+You can parse in arbitary data as a hex string like so:
 
-`binedit inFile 10 "Quotes are needed if you have spaces!"`
+`binedit inFile 10 'aAbB\x20\x00\x41c'`
 
-Non-printable characters are not so bad either:
-
-`binedit inFile 10 $(printf 'A\x01B')`
-
-But null byte (\x00) will need to be passed in via a patch file:
+Sometimes the command line will argue with you if you have anything but simple printable characters as an argument, if that's the case use a patch data file like so:
 
 ```bash
 printf 'A\x00B' > patch_data_file
