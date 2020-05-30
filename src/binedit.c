@@ -25,7 +25,7 @@ int parse(char *outBuffer, char *inBuffer) {
 	outBuffer[j++] = inBuffer[i];
 	break;
       case 'x':
-	assert(1 == sscanf(inBuffer+i+1, "%2x", (uint *) &outBuffer[j++]));
+	assert(1 == sscanf(&inBuffer[i + 1], "%2x", (uint *) &outBuffer[j++]));
 	i += 2;
 	break;
       default:
