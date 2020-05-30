@@ -6,12 +6,22 @@ Simple utility to let you patch files with arbitary data.
 
 `gcc -O2 -o bin/binedit src/binedit.c`
 
-## Running
+## Usage
 
-`binedit inputfile 10 patch_data`
+binedit can take the bytes to patch in either as a command line argument (convient unless you need to patch in nullbytes) or from a file.
 
-Will replace bytes at offset 10 of the file inputfile.txt with the contents of patch_data.txt and output to STDOUT.
+Printable characters are easiest to use:
 
-A patch file makes using patch data with a null byte easier for example:
+`binedit inFile 10 "Quotes are needed if you have spaces!"`
 
-`printf '\x00' > patch_data`
+Non-printable characters are not so bad either:
+
+`binedit inFile 10 $(printf 'A\x01B')`
+
+But null byte (\x00) will need to be passed in via a patch file:
+
+```bash
+printf 'A\x00B' > patch_data_file
+binedit inFile 10 -f patch_data_file
+```
+
