@@ -12,7 +12,7 @@ void usage(char *progname) {
   exit(EXIT_FAILURE);
 }
 
-int parse(char *outBuffer, char *inBuffer) {
+size_t parse(char *outBuffer, char *inBuffer) {
   int i, j;
   int len = strlen(inBuffer);
   i = 0;
