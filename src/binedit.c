@@ -6,7 +6,7 @@
 #include <sys/types.h>
 
 void usage(char *progname) {
-  puts("binedit v0.2.0 Ali Raheem");
+  puts("binedit v0.2.1 Ali Raheem");
   puts("https://github.com/ali-raheem/binedit");
   printf("Usage: %s input_file offset [-f] patch\n", progname);
   exit(EXIT_FAILURE);
@@ -20,11 +20,13 @@ size_t parse(char *outBuffer, char *inBuffer) {
   while(i < len) {
     switch(inBuffer[i]) {
     case '\\':
+      assert(i + 1 < len);
       switch(inBuffer[++i]) {
       case '\\':
 	outBuffer[j++] = inBuffer[i];
 	break;
       case 'x':
+	assert(i + 2 < len);
 	assert(1 == sscanf(&inBuffer[i + 1], "%2x", (uint *) &outBuffer[j++]));
 	i += 2;
 	break;
@@ -77,6 +79,7 @@ int main(int argc, char *argv[]) {
   assert(-1 != stat(input_file, &fpstat));
   char *buffer = (char *) malloc(sizeof(char) * fpstat.st_size);
   assert(NULL != buffer);
+  
   fp = fopen(input_file, "rb");
   assert(0 < fread(buffer, fpstat.st_size, sizeof(char), fp));
 
