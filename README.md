@@ -14,7 +14,7 @@ You can parse in arbitary data as a hex string like so:
 
 `binedit inFile 10 'aAbB\x20\x00\x41c'`
 
-!Note you must format the bytes as \xHH where HH are the hexidecimal characters.
+Note you must format the bytes as \xHH where HH are the hexidecimal characters.
 
 Sometimes the command line will argue with you if you have anything but simple printable characters as an argument, if that's the case use a patch data file like so:
 
@@ -23,3 +23,4 @@ printf 'A\x00B' > patch_data_file
 binedit inFile 10 -f patch_data_file
 ```
 
+The offset can be provided in hexdecimal format, but this should be prefixed by "0x" otherwise it'll be interpretted as decimal.
