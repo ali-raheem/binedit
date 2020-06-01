@@ -12,9 +12,8 @@ void usage(char *progname) {
   exit(EXIT_FAILURE);
 }
 
-size_t parse(char *outBuffer, char *inBuffer) {
-  int i, j;
-  int len = strlen(inBuffer);
+size_t parse(char *outBuffer, char *inBuffer, size_t len) {
+  size_t i, j;
   i = 0;
   j = 0;
   while(i < len) {
@@ -54,9 +53,9 @@ int main(int argc, char *argv[]) {
   char *input_file = argv[1];
   size_t offset;
   if(NULL == strchr(argv[2], 'x')){
-    offset = atoi(argv[2]);
+    assert(1 == sscanf(argv[2], "%zu", &offset));
   } else {
-    sscanf(argv[2], "%lx", &offset);
+    assert(1 == sscanf(argv[2], "%lx", &offset));
   }
   char *patch_file = argv[3];
   char *patch_data;
@@ -76,8 +75,9 @@ int main(int argc, char *argv[]) {
     fclose(fp);
   } else {
     patch_data = (char *) malloc(sizeof(char) * strlen(patch_file));
+    patch_len = (sizeof(char) * strlen(patch_file));
     assert(NULL != patch_data);
-    patch_len = parse(patch_data, patch_file);
+    patch_len = parse(patch_data, patch_file, patch_len);
   }
 
 
